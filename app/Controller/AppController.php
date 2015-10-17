@@ -31,4 +31,23 @@ App::uses('Controller', 'Controller');
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
+	// コンポーネントの設定
+	public $components = array(
+		// Authコンポーネントの設定
+		'Auth' => array(
+			'authenticate' => array(
+				'all' => array(
+					'fields' => array(
+						'username' => 'email',
+						'password' => 'password'
+					),
+				),
+				'Form',
+			),
+		),
+		// セッションコンポーネントの使用
+		'Session',
+		// Flashコンポーネントの仕様
+		'Flash',
+	);
 }
