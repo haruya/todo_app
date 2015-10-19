@@ -1,0 +1,6 @@
+@CHARSET "UTF-8";
+
+.deleteProject {
+	cursor: pointer;
+		color: blue;
+}

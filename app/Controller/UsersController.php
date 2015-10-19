@@ -29,7 +29,6 @@ class UsersController extends AppController {
 	 * プロジェクト一覧へ
 	 */
 	public function index() {
-		var_dump($this->Auth->user());exit;
 		// ログイン成功の場合プロジェクト一覧に飛ぶ
 		$this->redirect(array('controller' => 'projects', 'action' => 'index'));
 	}
