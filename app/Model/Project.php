@@ -20,6 +20,8 @@ class Project extends AppModel {
 
 	// プロジェクトのステータス変更のSQL実行
 	public function editStatus($id) {
+		$dataSource = $this->getDataSource();
+		$dataSource->begin();
 		$sql = "
 			UPDATE
 				projects
@@ -37,13 +39,47 @@ class Project extends AppModel {
 			'id' => $id
 		);
 		$data = $this->query($sql, $params);
-		$affected = $this->getAffectedRows();
-		if ($affected < 1) {
+		if ($data === false) {
+			$dataSource->rollback();
 			return false;
 		} else {
+			$dataSource->commit();
 			return true;
 		}
 	}
 
+	// プロジェクトの並び順変更のSQL実行
+	public function editSort($project) {
+		$error = false;
+		$dataSource = $this->getDataSource();
+		$dataSource->begin();
+		foreach ($project as $key => $val) {
+			$params = array();
+			$sql = "
+				UPDATE
+					projects
+				SET
+					seq = :seq
+				WHERE
+					id = :id
+			";
+			$params = array(
+				'seq' => $key,
+				'id' => $val
+			);
+			$data = $this->query($sql, $params);
+			if ($data === false) {
+				$error = true;
+				break;
+			}
+		}
+		if ($error) {
+			$dataSource->rollback();
+			return false;
+		} else {
+			$dataSource->commit();
+			return true;
+		}
+	}
 
 }

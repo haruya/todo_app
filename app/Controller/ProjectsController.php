@@ -20,7 +20,7 @@ class ProjectsController extends AppController {
     }
 
     /**
-     * プロジェクトステータス変更
+     * プロジェクトステータス変更処理
      */
     public function checkProject() {
     	if ($this->request->is('ajax')) {
@@ -28,29 +28,43 @@ class ProjectsController extends AppController {
     		$this->autoLayout = false;
     		$id = (int)$this->request->data('id');
     		$data = $this->Project->editStatus($id);
-    		if ($data) {
-    			$response = array('id' => $id);
-    		} else {
-    			$response = array('id', null);
-    		}
     		$this->header('Content-Type: application/json');
-    		echo json_encode($response);
+    		echo json_encode($data);
     	} else {
     		throw new MethodNotAllowedException();
     	}
     }
 
     /**
-     * プロジェクト削除(AJAX)
+     * プロジェクト並び順変更処理
+     */
+    public function sortProject() {
+    	if ($this->request->is('ajax')) {
+    		$this->autoRender = false;
+    		$this->autoLayout = false;
+    		parse_str($this->request->data('project'));
+    		$param = $this->Project->editSort($project);
+    		header('Content-Type: application/json; charset=utf-8');
+    		echo json_encode($param);
+    	} else {
+    		throw new MethodNotAllowedException();
+    	}
+    }
+
+    /**
+     * プロジェクト削除処理
      */
     public function delete() {
     	if ($this->request->is('ajax')) {
     		$this->autoRender = false;
     		$this->autoLayout = false;
     		$id = (int)$this->request->data('id');
+    		$transaction = $this->Project->begin();
     		if ($this->Project->delete($id)) {
+    			$this->Project->commit($transaction);
     			$response = array('id' => $id);
     		} else {
+    			$this->Project->rollback($transaction);
     			$response = array('id' => null);
     		}
     		$this->header('Content-Type: application/json');

@@ -20,7 +20,8 @@
 <span class="<?php echo h($project['Project']['status']); ?>"><?php echo h($project['Project']['name']); ?></span>
 </td>
 <td>
-<span class="deleteProject">[削除]</span>
+<span class="deleteProject">[削除]</span>&nbsp;
+<span class="drag">[drag]</span>
 </td>
 </tr>
 <?php endforeach; ?>

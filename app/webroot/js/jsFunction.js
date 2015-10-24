@@ -11,7 +11,7 @@ $(function() {
 				id: id
 			}
 		}).done(function(data) {
-			if (data.id != null) {
+			if (data) {
 				if (name.hasClass('done')) {
 					name.removeClass('done');
 				} else {
@@ -23,6 +23,29 @@ $(function() {
 		}).fail(function() {
 			alert('通信失敗');
 		});
+	});
+
+	// プロジェクト並び順変更処理
+	$('#projects tbody').sortable({
+		axis: 'y',
+		opacity: 0.4,
+		handle: '.drag',
+		update: function() {
+			$.ajax({
+				type: "POST",
+				url: "/todo_app/projects/sortProject/",
+				dataType: "json",
+				data: {
+					project: $(this).sortable('serialize')
+				}
+			}).done(function(data) {
+				if (!data) {
+					alert("並び替えに失敗しました。");
+				}
+			}).fail(function() {
+				alert("通信失敗");
+			});
+		}
 	});
 
 	// プロジェクト削除処理
