@@ -17,4 +17,33 @@ class Project extends AppModel {
 			),
 		),
 	);
+
+	// プロジェクトのステータス変更のSQL実行
+	public function editStatus($id) {
+		$sql = "
+			UPDATE
+				projects
+			SET
+				status = (
+					CASE
+						WHEN status = 'done' THEN 'notyet'
+						ELSE 'done'
+					END
+				)
+			WHERE
+				id = :id
+		";
+		$params = array(
+			'id' => $id
+		);
+		$data = $this->query($sql, $params);
+		$affected = $this->getAffectedRows();
+		if ($affected < 1) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+
 }

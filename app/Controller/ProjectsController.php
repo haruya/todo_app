@@ -20,6 +20,27 @@ class ProjectsController extends AppController {
     }
 
     /**
+     * プロジェクトステータス変更
+     */
+    public function checkProject() {
+    	if ($this->request->is('ajax')) {
+    		$this->autoRender = false;
+    		$this->autoLayout = false;
+    		$id = (int)$this->request->data('id');
+    		$data = $this->Project->editStatus($id);
+    		if ($data) {
+    			$response = array('id' => $id);
+    		} else {
+    			$response = array('id', null);
+    		}
+    		$this->header('Content-Type: application/json');
+    		echo json_encode($response);
+    	} else {
+    		throw new MethodNotAllowedException();
+    	}
+    }
+
+    /**
      * プロジェクト削除(AJAX)
      */
     public function delete() {

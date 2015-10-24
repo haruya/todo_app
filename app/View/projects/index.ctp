@@ -16,7 +16,9 @@
 <?php foreach($projects as $project) : ?>
 <tr id="project_<?php echo h($project['Project']['id']); ?>" data-id="<?php echo h($project['Project']['id']); ?>">
 <td><input type="checkbox" class="checkProject" <?php if ($project['Project']['status'] == 'done') : ?>checked="checked"<?php endif; ?> /></td>
-<td><?php echo h($project['Project']['name']); ?></td>
+<td>
+<span class="<?php echo h($project['Project']['status']); ?>"><?php echo h($project['Project']['name']); ?></span>
+</td>
 <td>
 <span class="deleteProject">[削除]</span>
 </td>
