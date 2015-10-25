@@ -13,9 +13,9 @@ $(function() {
 		}).done(function(data) {
 			if (data) {
 				if (name.hasClass('done')) {
-					name.removeClass('done');
+					name.removeClass('done').parent().next().children('span:eq(0)').addClass('editProject');
 				} else {
-					name.addClass('done');
+					name.addClass('done').parent().next().children('span:eq(0)').removeClass('editProject');
 				}
 			} else {
 				alert('ステータス変更に失敗しました。');
