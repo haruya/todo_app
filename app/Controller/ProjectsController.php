@@ -68,6 +68,23 @@ class ProjectsController extends AppController {
     }
 
     /**
+     * プロジェクト編集処理
+     */
+    public function edit() {
+    	if ($this->request->is('ajax')) {
+    		$this->autoRender = false;
+    		$this->autoLayout = false;
+    		$id = $this->request->data('id');
+    		$name = $this->request->data('name');
+    		$param = $this->Project->projectEdit($id, $name);
+    		$this->header('Content-Type: application/json');
+    		echo json_encode($param);
+    	} else {
+    		throw new MethodNotAllowedException();
+    	}
+    }
+
+    /**
      * プロジェクト削除処理
      */
     public function delete() {

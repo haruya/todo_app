@@ -83,11 +83,9 @@ $(function() {
 		if (projectName.length == 0) {
 			$('#projectAddDialog #frmProjectName').after('<p id="projectNameErr" style="color: red">「プロジェクト名」は入力必須です。</p>');
 			error = true;
-			$(this).removeAttr('disabled');
-		} else if (projectName.length >= 64) {
+		} else if (projectName.length > 64) {
 			$('#projectAddDialog #frmProjectName').after('<p id="projectNameErr" style="color: red">「プロジェクト名」は64文字以内で入力してください。</p>');
 			error = true;
-			$(this).removeAttr('disabled');
 		}
 		if (error == false) {
 			$.ajax({
@@ -99,18 +97,56 @@ $(function() {
 				}
 			}).done(function(data) {
 				if (!data) {
+					$('#projectAddDialog').dialog('close');
 					alert('プロジェクト新規追加に失敗しました。');
 				} else {
 					var e = $(
 						'<tr id="project_'+data+'" data-id="'+data+'">' +
 						'<td><input type="checkbox" class="checkProject" /></td>' +
 						'<td><span class="notyet"></span></td>' +
-						'<td><span class="deleteProject">[削除]</span>&nbsp;<span class="drag">[drag]</span></td>' +
+						'<td><span class="editProject">[編集]</span>&nbsp;<span class="deleteProject">[削除]</span>&nbsp;<span class="drag">[drag]</span></td>' +
 						'</tr>'
 					);
 					$('#projects').append(e).find('tr:last td:eq(1) span:first-child').text(projectName);
 					$('#projectAddDialog').dialog('close');
-					$('#frmProjectAdd').removeAttr('disabled');
+				}
+			}).fail(function() {
+				alert('通信失敗');
+			});
+		}
+		$(this).removeAttr('disabled');
+	});
+
+	// プロジェクト編集処理
+	$('#frmProjectEdit').click(function() {
+		$(this).attr('disabled', 'disabled');
+		$('#projectNameErr').remove();
+		var error = false;
+		var projectId = $('#projectEditDialog #frmProjectId').val();
+		var projectName = $('#projectEditDialog #frmProjectName').val();
+		if (projectName.length == 0) {
+			$('#projectEditDialog #frmProjectName').after('<p id="projectNameErr" style="color: red">「プロジェクト名」は入力必須です。</p>');
+			error = true;
+		} else if (projectName.length > 64) {
+			$('#projectEditDialog #frmProjectName').after('<p id="projectNameErr" style="color: red">「プロジェクト名」は64文字以内で入力してください。</p>');
+			error = true;
+		}
+		if (error == false) {
+			$.ajax({
+				type: "POST",
+				url: "/todo_app/projects/edit/",
+				dataType: "json",
+				data: {
+					id: projectId,
+					name: projectName
+				}
+			}).done(function(data) {
+				if (!data) {
+					$('#projectEditDialog').dialog('close');
+					alert('プロジェクト編集に失敗しました。');
+				} else {
+					$('#project_'+projectId).append().find('td:eq(1) span:first-child').text(projectName);
+					$('#projectEditDialog').dialog('close');
 				}
 			}).fail(function() {
 				alert('通信失敗');
@@ -124,9 +160,18 @@ $(function() {
 		$('#projectAddDialog').dialog('open');
 	});
 
+	// プロジェクトダイアログ(編集)オープン
+	$(document).on('click', '.editProject', function() {
+		var projectId = $(this).parent().parent().data('id');
+		var projectName = $(this).parent().prev().children('span:first-child').text();
+		$('#projectEditDialog #frmProjectName').val(projectName);
+		$('#projectEditDialog #frmProjectId').val(projectId);
+		$('#projectEditDialog').dialog('open');
+	});
 
-	// プロジェクト(新規追加)dialog設定
-	  $('#projectAddDialog').dialog({
+
+	// プロジェクト(新規、編集)dialog設定
+	  $('#projectAddDialog, #projectEditDialog').dialog({
 		  autoOpen: false,
 		  width: "400px",
 		  height: "auto",
@@ -136,6 +181,7 @@ $(function() {
 		  close: function() {
 			  $('#projectNameErr').remove();
 			  $('#frmProjectName').val('');
+			  $('#frmProjectId').val('');
 		  }
 	  });
 });

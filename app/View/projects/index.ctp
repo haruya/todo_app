@@ -21,7 +21,9 @@
 <span class="<?php echo h($project['Project']['status']); ?>"><?php echo h($project['Project']['name']); ?></span>
 </td>
 <td>
-<span class="deleteProject">[削除]</span>&nbsp;<span class="drag">[drag]</span>
+<span <?php if ($project['Project']['status'] == 'notyet') : ?>class="editProject"<?php endif; ?>>[編集]</span>&nbsp;
+<span class="deleteProject">[削除]</span>&nbsp;
+<span class="drag">[drag]</span>
 </td>
 </tr>
 <?php endforeach; ?>
@@ -44,4 +46,12 @@
 <p>プロジェクト名</p>
 <p><input type="text" id="frmProjectName" value="" /></p>
 <p style="text-align: center"><input type="button" id="frmProjectAdd" value="追加" style="width: 100px" /></p>
+</div>
+<div id="projectEditDialog" title="プロジェクト編集">
+<p>プロジェクト名</p>
+<p>
+<input type="text" id="frmProjectName" value="" />
+<input type="hidden" id="frmProjectId" value="" />
+</p>
+<p style="text-align: center"><input type="button" id="frmProjectEdit" value="編集" style="width: 100px" /></p>
 </div>

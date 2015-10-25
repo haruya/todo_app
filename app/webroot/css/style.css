@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 
-#addForm, .deleteProject, .drag {
+#addForm, .editProject, .deleteProject, .drag {
 	cursor: pointer;
 		color: blue;
 }

@@ -19,7 +19,7 @@ class Project extends AppModel {
 	);
 
 	// プロジェクトの新規追加し追加したIDを返す
-	public function projectInsert($projectName) {
+	public function projectInsert($name) {
 		$selectSql = "
 			SELECT
 				MAX(seq) + 1 as maxSeq
@@ -37,7 +37,7 @@ class Project extends AppModel {
 			$dataSource->begin();
 			$params = array(
 				'Project' => array(
-				'name' => $projectName,
+				'name' => $name,
 				'seq' => $seq
 				)
 			);
@@ -51,7 +51,29 @@ class Project extends AppModel {
 			return false;
 		}
 
+	}
 
+	// プロジェクトの編集をし、編集できたかの真偽値を返す
+	public function projectEdit($id, $name) {
+		$dataSource = $this->getDataSource();
+		try {
+			$dataSource->begin();
+			$params = array(
+				'Project' => array(
+					'id' => $id,
+					'name' => $name
+				)
+			);
+			$fields = array('name');
+			if (!$this->save($params, false, $fields)) {
+				throw new Exception();
+			}
+			$dataSource->commit();
+			return true;
+		} catch (Exception $e) {
+			$dataSource->rollback();
+			return false;
+		}
 	}
 
 	// プロジェクトのステータス変更のSQL実行
