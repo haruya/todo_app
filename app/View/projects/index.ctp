@@ -2,7 +2,7 @@
 
 <h2>プロジェクト一覧</h2>
 
-<?php if (!empty($projects)) : ?>
+<p><span id="addForm">新規追加</span></p>
 
 <table id="projects">
 <thead>
@@ -13,6 +13,7 @@
 </tr>
 </thead>
 <tbody>
+<?php if (!empty($projects)) : ?>
 <?php foreach($projects as $project) : ?>
 <tr id="project_<?php echo h($project['Project']['id']); ?>" data-id="<?php echo h($project['Project']['id']); ?>">
 <td><input type="checkbox" class="checkProject" <?php if ($project['Project']['status'] == 'done') : ?>checked="checked"<?php endif; ?> /></td>
@@ -20,19 +21,13 @@
 <span class="<?php echo h($project['Project']['status']); ?>"><?php echo h($project['Project']['name']); ?></span>
 </td>
 <td>
-<span class="deleteProject">[削除]</span>&nbsp;
-<span class="drag">[drag]</span>
+<span class="deleteProject">[削除]</span>&nbsp;<span class="drag">[drag]</span>
 </td>
 </tr>
 <?php endforeach; ?>
+<?php endif; ?>
 </tbody>
 </table>
-
-<?php else : ?>
-
-<p>現在プロジェクトは存在しません。</p>
-
-<?php endif; ?>
 
 </div>
 
@@ -43,4 +38,10 @@
 <li><?php echo $this->Html->link('ログアウト', array('controler' => 'users', 'action' => 'logout')); ?></li>
 </ul>
 
+</div>
+<!-- ui-dialog -->
+<div id="projectAddDialog" title="プロジェクト新規追加">
+<p>プロジェクト名</p>
+<p><input type="text" id="frmProjectName" value="" /></p>
+<p style="text-align: center"><input type="button" id="frmProjectAdd" value="追加" style="width: 100px" /></p>
 </div>

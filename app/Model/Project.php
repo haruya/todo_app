@@ -18,6 +18,42 @@ class Project extends AppModel {
 		),
 	);
 
+	// プロジェクトの新規追加し追加したIDを返す
+	public function projectInsert($projectName) {
+		$selectSql = "
+			SELECT
+				MAX(seq) + 1 as maxSeq
+			FROM
+				projects as Project
+		";
+		$data = $this->query($selectSql);
+		if ($data[0][0]['maxSeq'] != null) {
+			$seq = $data[0][0]['maxSeq'];
+		} else {
+			$seq = 0;
+		}
+		$dataSource = $this->getDataSource();
+		try {
+			$dataSource->begin();
+			$params = array(
+				'Project' => array(
+				'name' => $projectName,
+				'seq' => $seq
+				)
+			);
+			if (!$this->save($params)) {
+				throw new Exception();
+			}
+			$dataSource->commit();
+			return $this->getLastInsertID();
+		} catch (Exception $e) {
+			$dataSource->rollback();
+			return false;
+		}
+
+
+	}
+
 	// プロジェクトのステータス変更のSQL実行
 	public function editStatus($id) {
 		$dataSource = $this->getDataSource();
