@@ -1,4 +1,13 @@
 $(function() {
+	/********************************************************* datepicker */
+	// 日本語を有効化
+	$.datepicker.setDefaults($.datepicker.regional['ja']);
+	// 日付選択ボックスの生成
+	$('#frmStartDate, #frmEndDate').datepicker({
+		dateFormat: 'yy-mm-dd',
+		showOn: 'both'
+	});
+
 
 	/********************************************************* プロジェクト */
 	// プロジェクトstatus変更処理

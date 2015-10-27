@@ -1,6 +1,6 @@
 <div class="form">
 
-<h2><?php echo h($project['Project']['name']); ?>のタスク新規追加</h2>
+<h2><?php echo $this->data['Project']['name']; ?>のタスク編集</h2>
 
 <?php echo $this->Form->create('Task', array('novalidate' => true)); ?>
 <table>
@@ -57,7 +57,9 @@
 </tr>
 </table>
 
-<?php echo $this->Form->input('project_id', array('type' => 'hidden', 'value' => $project['Project']['id'])); ?>
+<?php echo $this->Form->input('id', array('type' => 'hidden', 'value' => $this->data['Task']['id'])); ?>
+<?php echo $this->Form->input('project_id', array('type' => 'hidden', 'value' => $this->data['Task']['project_id'])); ?>
+<?php echo $this->Form->input('seq', array('type' => 'hidden', 'value' => $this->data['Task']['seq'])); ?>
 <?php echo $this->Form->end('追加'); ?>
 
 </div>
@@ -67,7 +69,7 @@
 <h3>メニュー</h3>
 <ul>
 <li><?php echo $this->Html->link('プロジェクト一覧', array('controller' => 'projects', 'action' => 'index')); ?></li>
-<li><?php echo $this->Html->link('タスク一覧', array('action' => 'index', $project['Project']['id'])); ?></li>
+<li><?php echo $this->Html->link('タスク一覧', array('action' => 'index', $this->data['Task']['project_id'])); ?></li>
 <li><?php echo $this->Html->link('ログアウト', array('controller' => 'users', 'action' => 'logout')); ?></li>
 </ul>
 
