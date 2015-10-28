@@ -63,7 +63,7 @@ class TasksController extends AppController {
 	 * タスク編集
 	 */
 	public function edit($id = null) {
-		if ($this->request->is('post')) {
+		if ($this->request->is('put')) {
 			// 登録用データの生成
 			$data['Task']['id'] = $this->request->data['Task']['id'];
 			$data['Task']['project_id'] = $this->request->data['Task']['project_id'];
@@ -76,6 +76,8 @@ class TasksController extends AppController {
 			$data['Task']['worker'] = $this->request->data['Task']['worker'];
 			$data['Task']['start_date'] = $this->request->data['Task']['start_date'];
 			$data['Task']['end_date'] = $this->request->data['Task']['end_date'];
+            
+            $projectName = $this->request->data['Task']['project_name'];
 			if ($this->Task->save($data)) {
 				$this->Flash->set('タスクを編集しました。');
 				$this->redirect(array('action' => 'index', $data['Task']['project_id']));
@@ -88,7 +90,9 @@ class TasksController extends AppController {
 				$this->Flash->set('タスクが見つかりませんでした。');
 				$this->redirect(array('controller' => 'projects', 'action' => 'index'));
 			}
+            $projectName = $this->request->data['Project']['name'];
 		}
+            $this->set('projectName', $projectName);
 	}
 
 	/**

@@ -1,6 +1,9 @@
 <div class="form">
 
-<h2><?php echo $this->data['Project']['name']; ?>のタスク編集</h2>
+<h2>
+<?php echo $projectName; ?>のタスク編集
+
+</h2>
 
 <?php echo $this->Form->create('Task', array('novalidate' => true)); ?>
 <table>
@@ -60,6 +63,8 @@
 <?php echo $this->Form->input('id', array('type' => 'hidden', 'value' => $this->data['Task']['id'])); ?>
 <?php echo $this->Form->input('project_id', array('type' => 'hidden', 'value' => $this->data['Task']['project_id'])); ?>
 <?php echo $this->Form->input('seq', array('type' => 'hidden', 'value' => $this->data['Task']['seq'])); ?>
+<?php echo $this->Form->input('status', array('type' => 'hidden', 'value' => $this->data['Task']['status'])); ?>
+<?php echo $this->Form->input('project_name', array('type' => 'hidden', 'value' => $projectName)); ?>
 <?php echo $this->Form->end('追加'); ?>
 
 </div>
