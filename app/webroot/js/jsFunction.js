@@ -1,4 +1,15 @@
 $(function() {
+	/********************************************************* datepicker */
+	// 日本語を有効化
+	$.datepicker.setDefaults($.datepicker.regional['ja']);
+	// 日付選択ボックスの生成
+	$('#frmStartDate, #frmEndDate').datepicker({
+		dateFormat: 'yy-mm-dd',
+		showOn: 'both'
+	});
+
+
+	/********************************************************* プロジェクト */
 	// プロジェクトstatus変更処理
 	$(document).on('click', '.checkProject', function() {
 		var id = $(this).parent().parent().data('id');
@@ -29,7 +40,7 @@ $(function() {
 	$('#projects tbody').sortable({
 		axis: 'y',
 		opacity: 0.4,
-		handle: '.drag',
+		handle: '.projectDrag',
 		update: function() {
 			$.ajax({
 				type: "POST",
@@ -104,7 +115,7 @@ $(function() {
 						'<tr id="project_'+data+'" data-id="'+data+'">' +
 						'<td><input type="checkbox" class="checkProject" /></td>' +
 						'<td><span class="notyet"></span></td>' +
-						'<td><span class="editProject">[編集]</span>&nbsp;<span class="deleteProject">[削除]</span>&nbsp;<span class="drag">[drag]</span></td>' +
+						'<td><a href="/todo_app/tasks?id='+data+'" class="taskLink">[タスク]</a>&nbsp;<span class="editProject">[編集]</span>&nbsp;<span class="deleteProject">[削除]</span>&nbsp;<span class="projectDrag">[drag]</span></td>' +
 						'</tr>'
 					);
 					$('#projects').append(e).find('tr:last td:eq(1) span:first-child').text(projectName);
@@ -184,4 +195,77 @@ $(function() {
 			  $('#frmProjectId').val('');
 		  }
 	  });
+		/********************************************************* タスク */
+		// タスクstatus変更処理
+		$(document).on('change', '.checkTask', function() {
+			var status = $(this).val();
+			var id = $(this).parent().parent().data('id');
+			$.ajax({
+				type: "POST",
+				url: "/todo_app/tasks/checkTask/",
+				dataType: "json",
+				data: {
+					status: status,
+					id: id
+				}
+			}).done(function(data) {
+				if (data) {
+					$('#task_' + id).removeClass().addClass(status);
+				} else {
+					alert('ステータス変更に失敗しました。');
+				}
+			}).fail(function() {
+				alert('通信失敗');
+			});
+		});
+
+		// タスク並び順変更処理
+		$('#tasks tbody').sortable({
+			axis: 'y',
+			opacity: 0.4,
+			handle: '.taskDrag',
+			update: function() {
+				$.ajax({
+					type: "POST",
+					url: "/todo_app/tasks/sortTask/",
+					dataType: "json",
+					data: {
+						task: $(this).sortable('serialize'),
+						projectId: $('#projectId').val()
+					}
+				}).done(function(data) {
+					if (!data) {
+						alert("並び替えに失敗しました。");
+					}
+				}).fail(function() {
+					alert("通信失敗");
+				});
+			}
+		});
+
+		// タスク削除処理
+		$(document).on('click', '.deleteTask', function() {
+			if (confirm('本当に削除しますか？')) {
+				var id = $(this).parent().parent().data('id');
+				$.ajax({
+					type: "POST",
+					url: "/todo_app/tasks/delete/",
+					dataType: "json",
+					data: {
+						id: id
+					}
+				}).done(function(data) {
+					if (data.id != null) {
+						$('#task_'+data.id).fadeOut(800, function() {
+							alert('プロジェクトを削除しました。');
+						});
+
+					} else {
+						alert('プロジェクト削除に失敗しました。');
+					}
+				}).fail(function() {
+					alert('通信失敗');
+				});
+			}
+		});
 });

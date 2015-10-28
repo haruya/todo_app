@@ -1,11 +1,28 @@
 @CHARSET "UTF-8";
 
-#addForm, .editProject, .deleteProject, .drag {
+#addForm, .editProject, .deleteProject, .projectDrag, .deleteTask, .taskDrag, .sosaLink {
 	cursor: pointer;
-		color: blue;
+	color: blue;
+	text-decoration: none;
+	font-weight: normal;
 }
 
 .done {
 	text-decoration: line-through;
 	color: gray;
+}
+
+.before_work {
+	background-color: none;
+}
+
+.working {
+	background-color: yellow;
+}
+
+.after_work {
+	background-color: #999999;
+}
+.req {
+	color: red;
 }

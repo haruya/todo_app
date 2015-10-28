@@ -21,9 +21,10 @@
 <span class="<?php echo h($project['Project']['status']); ?>"><?php echo h($project['Project']['name']); ?></span>
 </td>
 <td>
+<?php echo $this->Html->link('[タスク]', array('controller' => 'tasks', 'action' => 'index', $project['Project']['id']), array('class' => 'sosaLink')); ?>&nbsp;
 <span <?php if ($project['Project']['status'] == 'notyet') : ?>class="editProject"<?php endif; ?>>[編集]</span>&nbsp;
 <span class="deleteProject">[削除]</span>&nbsp;
-<span class="drag">[drag]</span>
+<span class="projectDrag">[drag]</span>
 </td>
 </tr>
 <?php endforeach; ?>
@@ -37,7 +38,7 @@
 
 <h3>メニュー</h3>
 <ul>
-<li><?php echo $this->Html->link('ログアウト', array('controler' => 'users', 'action' => 'logout')); ?></li>
+<li><?php echo $this->Html->link('ログアウト', array('controller' => 'users', 'action' => 'logout')); ?></li>
 </ul>
 
 </div>
